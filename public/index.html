@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>AI Stock VN SMS</title>
+    <meta name="description" content="Read your SMS messages in AI Stock VN SMS." />
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <!-- Login -->
+    <main id="login-view" class="login" hidden>
+      <form id="login-form" class="login-card" novalidate>
+        <h1 class="login-title">AI Stock VN SMS</h1>
+        <p class="login-sub">Sign in to read your SMS.</p>
+
+        <label class="field">
+          <span class="field-label">Email</span>
+          <input id="login-email" name="email" type="email" autocomplete="username" required />
+        </label>
+
+        <label class="field">
+          <span class="field-label">Password</span>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" required />
+        </label>
+
+        <button id="login-submit" class="btn btn-primary btn-block" type="submit">Sign in</button>
+        <p id="login-error" class="error-line" role="alert" hidden></p>
+      </form>
+    </main>
+
+    <!-- Inbox -->
+    <div id="inbox-view" class="app" hidden>
+      <header class="topbar">
+        <div class="brand">AI Stock VN SMS</div>
+        <div class="search">
+          <input id="search" type="search" placeholder="Search sender or message" aria-label="Search messages" autocomplete="off" />
+        </div>
+        <div class="topbar-right">
+          <span id="count" class="count" aria-live="polite"></span>
+          <button id="refresh" class="btn" type="button">Refresh</button>
+          <button id="logout" class="btn" type="button">Sign out</button>
+        </div>
+      </header>
+      <p id="inbox-error" class="error-line error-bar" role="alert" hidden></p>
+
+      <div class="layout" id="layout">
+        <section class="list-pane" aria-label="Messages">
+          <ul id="list" class="list"></ul>
+          <p id="list-status" class="list-status" role="status"></p>
+          <div class="list-more">
+            <button id="load-more" class="btn btn-block" type="button" hidden>Load more</button>
+          </div>
+        </section>
+
+        <section class="detail-pane" aria-label="Message">
+          <button id="back" class="btn back-btn" type="button">Back to messages</button>
+          <div id="detail-empty" class="detail-empty">Select a message to read it.</div>
+          <article id="detail" class="detail" hidden>
+            <dl class="meta">
+              <dt>From</dt>
+              <dd id="d-from"></dd>
+              <dt>To</dt>
+              <dd id="d-to"></dd>
+              <dt>Received</dt>
+              <dd id="d-time"></dd>
+            </dl>
+            <div id="d-body" class="body"></div>
+          </article>
+        </section>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
