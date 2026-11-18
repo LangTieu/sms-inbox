@@ -14,6 +14,7 @@
     loginEmail: $("login-email"),
     loginPassword: $("login-password"),
     loginSubmit: $("login-submit"),
+    modeToggle: $("mode-toggle"),
     loginError: $("login-error"),
     inboxView: $("inbox-view"),
     inboxError: $("inbox-error"),
@@ -35,6 +36,7 @@
   };
 
   var state = {
+    mode: "login",
     messages: [],
     nextBefore: null,
     query: "",
@@ -115,6 +117,9 @@
     el.loginView.hidden = false;
     el.loginPassword.value = "";
     el.loginSubmit.disabled = false;
+    state.mode = "login";
+    el.loginSubmit.textContent = "Sign in";
+    el.modeToggle.textContent = "No account yet? Create the first account";
     showError(el.inboxError, "");
   }
 
@@ -329,6 +334,18 @@
 
   /* Events */
 
+  function doLogin(email, password) {
+    return api("/api/auth/login", { method: "POST", json: { email: email, password: password }, allow401: true });
+  }
+
+  el.modeToggle.addEventListener("click", function () {
+    state.mode = state.mode === "register" ? "login" : "register";
+    var registering = state.mode === "register";
+    el.loginSubmit.textContent = registering ? "Create account" : "Sign in";
+    el.modeToggle.textContent = registering ? "Already have an account? Sign in" : "No account yet? Create the first account";
+    showError(el.loginError, "");
+  });
+
   el.loginForm.addEventListener("submit", function (e) {
     e.preventDefault();
     var email = el.loginEmail.value.trim();
@@ -336,7 +353,21 @@
     showError(el.loginError, "");
     el.loginSubmit.disabled = true;
 
-    api("/api/auth/login", { method: "POST", json: { email: email, password: password }, allow401: true })
+    var action;
+    if (state.mode === "register") {
+      action = api("/api/auth/register", { method: "POST", json: { email: email, password: password }, allow401: true })
+        .catch(function (err) {
+          if (err && err.status === 403) throw new Error("Registration is closed - an account already exists.");
+          if (err && err.status === 400) throw new Error("Password must be at least 10 characters.");
+          throw err;
+        })
+        .then(function () {
+          return doLogin(email, password);
+        });
+    } else {
+      action = doLogin(email, password);
+    }
+    action
       .then(function () {
         showInbox();
       })
