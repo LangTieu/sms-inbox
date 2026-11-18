@@ -332,3 +332,6 @@ input:focus-visible,
     display: inline-flex;
   }
 }
+
+.switch-line { text-align: center; margin-top: 12px; }
+.link-btn { background: none; border: none; color: var(--accent); cursor: pointer; text-decoration: underline; font: inherit; padding: 4px; }
